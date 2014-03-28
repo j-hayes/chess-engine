@@ -36,14 +36,14 @@ namespace AppleJack.Views
 
         private void UIElement_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ((Grid) sender).Background = Brushes.Teal;
+            //((Grid) sender).Background = Brushes.Teal;
             ((GameViewModel) this.DataContext).LeftButtonDownInSquare(((Grid)sender).Uid);
 
         }
 
         private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ((Grid)sender).Background = Brushes.Purple;
+            //((Grid)sender).Background = Brushes.Purple;
             ((GameViewModel)this.DataContext).LeftButtonUpInSquare(((Grid)sender).Uid);
         }
     }

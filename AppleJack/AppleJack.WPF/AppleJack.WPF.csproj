@@ -96,9 +96,6 @@
     </Compile>
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Commands\CommandReference.cs" />
-    <Compile Include="Models\GameModel.cs" />
-    <Compile Include="Models\IGameModel.cs" />
-    <Compile Include="Models\InitalBoardConstants.cs" />
     <Compile Include="Models\StudentsModel.cs" />
     <Compile Include="ViewModels\GameViewModel.cs" />
     <Compile Include="Views\GameView.xaml.cs">
@@ -145,6 +142,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AppleJack.Engine\AppleJack.Engine.csproj">
+      <Project>{b739161a-fd1d-4feb-b285-5a3ab43d0d36}</Project>
+      <Name>AppleJack.Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

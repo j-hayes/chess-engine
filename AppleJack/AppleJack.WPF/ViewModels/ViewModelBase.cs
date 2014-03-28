@@ -11,13 +11,9 @@ namespace AppleJack.WPF.ViewModels
 
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-
+            var handler = PropertyChanged;
             if (handler != null)
-            {
                 handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
-
     }
 }

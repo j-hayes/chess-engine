@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
-namespace AppleJack.WPF.Models
+namespace AppleJack.Engine
 {
-    internal interface IGameModel
+    public interface IGameModel
     {
          BitArray AllPieces{ get;  }
        
 
-         BitArray WhitePieces{ get;  }
+         BitArray AllWhitePieces{ get;  }
 
 
-         BitArray BlackPieces { get; }
+        BitArray AllBlackPieces { get; }
        
         BitArray WhitePawns { get;  }
 
@@ -43,6 +37,8 @@ namespace AppleJack.WPF.Models
 
         BitArray BlackQueens { get;  }
         BitArray BlackKing { get;  }
+
+        int PieceTypeCount { get; }
 
         bool TryMove(int squareToMoveFrom, int squareToMoveTo);
     }
