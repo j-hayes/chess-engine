@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="550"
+      
 	Title="GameView">
 
     <Grid>
@@ -16,12 +17,12 @@
 
         <Menu Grid.Row="0">
             <MenuItem Header="_File">
-                <MenuItem Command="{Binding ExitCommand}" Header="E_xit" InputGestureText="Ctrl-X" />
-                
+                <MenuItem Command="{Binding ExitCommand}" Header="E_xit" InputGestureText="Ctrl-X" />         
             </MenuItem>
         </Menu>
-        <Grid Row="1"><TextBlock Text="Buffer"></TextBlock></Grid>
-        <ItemsControl Grid.Row="2" ItemsSource="{Binding TheBoard}">
+        <Grid Row="1">
+            <TextBlock  Text="{Binding Path=SquareSelected, Mode=TwoWay, UpdateSourceTrigger=Default}"></TextBlock></Grid>
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding TheBoard}" Margin="-10,10,10,-10">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                     <UniformGrid Width="500" Height="500" Name="BoardGrid" Columns="8" Rows="8" ></UniformGrid>
@@ -30,7 +31,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
 
-                    <Grid Background="{Binding SquareColor}">
+                    <Grid Background="{Binding SquareColor}"   Uid="{Binding Index}" MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp"  MouseLeftButtonDown="UIElement_OnMouseLeftButtonDown" >
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
                                Text="{Binding PieceShape}" Foreground="{Binding PieceColor}" ></TextBlock>
                 </Grid>

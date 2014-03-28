@@ -44,5 +44,6 @@ namespace AppleJack.WPF.Models
         BitArray BlackQueens { get;  }
         BitArray BlackKing { get;  }
 
+        bool TryMove(int squareToMoveFrom, int squareToMoveTo);
     }
 }

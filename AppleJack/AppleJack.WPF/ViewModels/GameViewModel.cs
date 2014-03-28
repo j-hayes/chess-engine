@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using AppleJack.WPF.Commands;
 using AppleJack.WPF.Models;
 
 namespace AppleJack.WPF.ViewModels
 {
-    internal class GameViewModel : ViewModelBase
+    public class GameViewModel : ViewModelBase
     {
         private DelegateCommand _exitCommand;
-        private Window _view;
+
+
         private IGameModel _theGame;
+
+        public string SquareSelected { get; set; }
 
         public ObservableCollection<ChessGridItem> TheBoard
         {
@@ -21,9 +27,9 @@ namespace AppleJack.WPF.ViewModels
             set;
         }
 
-        public GameViewModel(bool playerIsWhite, Window view)
+        public GameViewModel(bool playerIsWhite)
         {
-            _view = view;
+
             _theGame = new GameModel();
             ChessGridItem[] items = new ChessGridItem[64];
 
@@ -34,9 +40,11 @@ namespace AppleJack.WPF.ViewModels
             string lightSquare = "SandyBrown";
             bool switcher = true;
 
+            SquareSelected = "None Selected";
             for (int i = 0; i < items.Length; i++)
             {
                 items[i] = new ChessGridItem();
+                items[i].Index = i;
                 if (switcher)
                 {
                     items[i].SquareColor = lightSquare;
@@ -121,13 +129,39 @@ namespace AppleJack.WPF.ViewModels
                 {
                     switcher = !switcher;
                 }
-                //items[i].Index = i;
+                items[i].Index = i;
 
             }
             TheBoard = new ObservableCollection<ChessGridItem>(items);
      
         }
- 
+
+
+        public void LeftButtonDownInSquare(string id)
+        {
+             SquareToMoveFrom = int.Parse(id);
+
+
+
+
+        }
+
+        private int SquareToMoveFrom { get; set; }
+        private int SquareToMoveTo { get; set; }
+
+        public void LeftButtonUpInSquare(string id)
+        {
+            SquareToMoveTo = int.Parse(id);
+            _theGame.TryMove(SquareToMoveFrom, SquareToMoveTo);
+          
+
+        }
+
+        private void UpdateBoard()
+        {
+            OnPropertyChanged(TheBoard);
+        }
+
 
         public ICommand ExitCommand
         {
@@ -143,8 +177,9 @@ namespace AppleJack.WPF.ViewModels
 
         private void Exit()
         {
-            _view.Close();
+            throw new NotImplementedException();
         }
+
     }
 
     public class ChessGridItem

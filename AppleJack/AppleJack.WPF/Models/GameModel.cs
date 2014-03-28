@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using System.Windows.Media.Converters;
 
 namespace AppleJack.WPF.Models
 {
-    internal class GameModel : IGameModel
+    public class GameModel : IGameModel
     {
         /*
          a board bit board is below 
@@ -120,6 +121,39 @@ namespace AppleJack.WPF.Models
         public BitArray BlackKing
         {
             get { return board[14]; }
+        }
+
+        public bool TryMove(int from, int to)
+        {
+            // todo: think about roll back strategy? 
+
+            if (AllPieces[from])
+            {
+                if (WhitePieces[from])
+                {
+                    if (WhitePawns[from])
+                    {
+                        WhitePawns[from] = false;
+                        WhitePawns[to] = true;//this is oversimplified
+                        
+                    }
+                }
+                else if (BlackPieces[from])
+                {
+                    if (BlackPawns[from])
+                    {
+                        BlackPawns[from] = false;
+                        BlackPawns[to] = true; //oversimplified should be checked obviously
+                    }
+                }
+            }
+
+
+
+
+
+            AllPieces[to] = true;
+            throw new NotImplementedException();
         }
     }
 }

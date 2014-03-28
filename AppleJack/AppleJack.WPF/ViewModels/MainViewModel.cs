@@ -82,8 +82,7 @@ namespace AppleJack.WPF.ViewModels
 
         private void StartNewGame(bool playerIsWhite)
         {
-            var gameView = new GameView();
-            gameView.DataContext = new GameViewModel(playerIsWhite, gameView);
+            var gameView = new GameView(new GameViewModel(true));
             gameView.Show();
 
         }
