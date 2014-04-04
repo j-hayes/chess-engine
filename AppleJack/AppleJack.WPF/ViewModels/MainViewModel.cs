@@ -16,7 +16,7 @@ namespace AppleJack.WPF.ViewModels
         private DelegateCommand _newGameBlackCommand;
 
 
-        #region Constructor
+        #region Constructoir
         public MainViewModel()
         {
           
@@ -26,7 +26,7 @@ namespace AppleJack.WPF.ViewModels
 
         #region Properties
 
-        public const string WelcomeMessage = "Would you like to play a board";
+        public const string WelcomeMessage = "Would you like toi play a board";
 
         #endregion
 
@@ -58,7 +58,7 @@ namespace AppleJack.WPF.ViewModels
             }
         }
 
-        public ICommand NewGameWhiteBlack
+        public ICommand NewGameBlackCommand
         {
             get
             {
@@ -82,7 +82,7 @@ namespace AppleJack.WPF.ViewModels
 
         private void StartNewGame(bool playerIsWhite)
         {
-            var gameView = new GameView(new GameViewModel(true));
+            var gameView = new GameView(new GameViewModel(playerIsWhite));
             gameView.Show();
 
         }

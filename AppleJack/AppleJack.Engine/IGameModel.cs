@@ -40,6 +40,6 @@ namespace AppleJack.Engine
 
         int PieceTypeCount { get; }
 
-        bool TryMove(int squareToMoveFrom, int squareToMoveTo);
+        bool TryMove(int squaretoMovefromi, int squaretoMovetoi);
     }
 }

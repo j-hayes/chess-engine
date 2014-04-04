@@ -20,7 +20,6 @@ namespace AppleJack.WPF.ViewModels
     {
         private DelegateCommand _exitCommand;
 
-
         private IGameModel _theGame;
         private string _printToScreen;
         private ObservableCollection<ChessGridItem> _theBoard;
@@ -73,8 +72,7 @@ namespace AppleJack.WPF.ViewModels
             PrintToScreen = "Welcome Make Your Move";
             for (int i = 0; i < items.Length; i++)
             {
-                items[i] = new ChessGridItem();
-                items[i].Index = i;
+                items[i] = new ChessGridItem {Index = i};
                 if (switcher)
                 {
                     items[i].SquareColor = LightSquare;
@@ -87,9 +85,10 @@ namespace AppleJack.WPF.ViewModels
                 if (_theGame.AllPieces[i]) // can this block be refactored to be the refresh board it needs to be a //
                     //loop but this may be a method that the larger method uses
                 {
-                    items[i].PieceColor = White;
+               
                     if (_theGame.AllWhitePieces[i])
                     {
+                        items[i].PieceColor = White;
                         if (_theGame.WhitePawns[i])
                         {
                             items[i].PieceShape = Pawn;
@@ -168,7 +167,7 @@ namespace AppleJack.WPF.ViewModels
         }
 
 
-        public void LeftButtonDownInSquare(string id)
+        public void LeftButtonDownInSquare(string id)//rename this variable todo:
         {
              SquareToMoveFrom = int.Parse(id);
             PrintToScreen = id;

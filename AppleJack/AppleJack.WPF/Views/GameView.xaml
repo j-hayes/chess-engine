@@ -20,6 +20,7 @@
         </Menu>
         <Grid Row="1">
             <TextBlock  Text="{Binding Path=PrintToScreen, Mode=TwoWay}"></TextBlock></Grid>
+        
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Path=TheBoard, Mode=TwoWay}" Margin="-10,10,10,-10">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

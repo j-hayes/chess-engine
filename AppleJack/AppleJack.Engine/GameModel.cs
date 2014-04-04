@@ -4,9 +4,28 @@ using System.Linq;
 
 namespace AppleJack.Engine
 {
+    public enum ChessPeiceType
+    {
+        WhitePawn,
+        WhiteRook,
+        WhiteKnight,
+        WhiteBishop,
+        WhiteQueen,
+        WhiteKing,
+        BlackPawn,
+        BlackRook,
+        BlackKnight,
+        BlackBishop,
+        BlackQueen,
+        BlackKing
+
+    }
+
     public class GameModel : IGameModel
     {
    
+
+
         /*
          a board bit board is below 
          * 0th bitarray is 
@@ -122,106 +141,202 @@ namespace AppleJack.Engine
 
         public int PieceTypeCount
         {
-            get { return board.Count(); }
+            get { return board.Count(); }//not correct??
            
         }
-
-        public bool TryMove(int from, int to)
+        /*This method throws illegal move exception if one occurs*/
+        public bool TryMove(int fromi, int toi) 
         {
-            // todo: think about roll back strategy? 
-
-
-            if (AllPieces[from])
-            {
-                RemovePeiceAtIndex(to);
-                if (AllWhitePieces[from])
+            // toido: think about roll back strategy? 
+           
+                if ((toi < 64 && toi > -1) && (fromi < 64 && fromi > -1)) //Test if moves are on board 0 to 63 indedicies 
                 {
-                    if (WhitePawns[from])
+                   // CheckForSelfCheckMove(fromi, toi);
+
+                    if (AllPieces[fromi])
                     {
-                        WhitePawns[from] = false;
-                        WhitePawns[to] = true; //this is oversimplified
-                    }
-                    else if (WhiteRooks[from])
-                    {
-                        WhiteRooks[from] = false;
-                        WhiteRooks[to] = true; //this is oversimplified
-                    }
-                    else if (WhiteKnights[from])
-                    {
-                        WhiteKnights[from] = false;
-                        WhiteKnights[to] = true; //this is oversimplified
-                    }
-                    else if (WhiteBishops[from])
-                    {
-                        WhiteBishops[from] = false;
-                        WhiteBishops[to] = true; //this is oversimplified
-                    }
-                    else if (WhiteQueens[from])
-                    {
-                        WhiteQueens[from] = false;
-                        WhiteQueens[to] = true; //this is oversimplified
-                    }
-                    else if(WhiteKing[from])
-                    {
-                        WhiteKing[from] = false;
-                        WhiteKing[to] = true;
-                    }
-                    AllWhitePieces[to] = true;
-                    AllWhitePieces[from] = false;
-                }
-                else if (AllBlackPieces[from])
-                {
-                    if (AllBlackPieces[from])
-                    {
-                        if (BlackPawns[from])
+                        bool wasLegal = false;
+                      
+                        if (AllWhitePieces[fromi])
                         {
-                            BlackPawns[from] = false;
-                            BlackPawns[to] = true; //this is oversimplified
+                            if (WhitePawns[fromi])
+                            {
+                                wasLegal = DoPawnMoveIfLegal(true, fromi, toi);
+                            }
+                            else if (WhiteRooks[fromi])
+                            {
+                                wasLegal = DoRookMoveIfLegal(true, fromi, toi);
+                            }
+                            else if (WhiteKnights[fromi])
+                            {
+                                wasLegal = DoKnightMoveIfLegal(true, fromi, toi);
+                            }
+                            else if (WhiteBishops[fromi])
+                            {
+                                wasLegal = DoBishopMoveIfLegal(true, fromi, toi);
+                            }
+                            else if (WhiteQueens[fromi])
+                            {
+                                wasLegal = DoQueenMoveIfLegal(true, fromi, toi);
+                            }
+                            else if (WhiteKing[fromi])
+                            {
+                                wasLegal = DoKingMoveIfLegal(true, fromi, toi);
+                            }
+                            if (wasLegal)
+                            {
+                                AllWhitePieces[toi] = true;
+                                AllWhitePieces[fromi] = false;
+                                AllPieces[toi] = true;
+                                AllPieces[fromi] = false;
+                                return true;
+                            }
+                           
                         }
-                        else if (BlackRooks[from])
+                        else if (AllBlackPieces[fromi])
                         {
-                            BlackRooks[from] = false;
-                            BlackRooks[to] = true; //this is oversimplified
+                            if (BlackPawns[fromi])
+                            {
+                                wasLegal = DoPawnMoveIfLegal(false, fromi, toi);
+                            }
+                            else if (BlackRooks[fromi])
+                            {
+                                wasLegal = DoRookMoveIfLegal(false, fromi, toi);
+                            }
+                            else if (BlackKnights[fromi])
+                            {
+                                wasLegal = DoKnightMoveIfLegal(true, fromi, toi);
+                            }
+                            else if (BlackBishops[fromi])
+                            {
+                                wasLegal = DoBishopMoveIfLegal(false, fromi, toi);
+                            }
+                            else if (BlackQueens[fromi])
+                            {
+                                wasLegal = DoQueenMoveIfLegal(false, fromi, toi);
+                            }
+                            else if (BlackKing[fromi])
+                            {
+                                wasLegal = DoKingMoveIfLegal(false, fromi, toi);
+                            }
+                            if (wasLegal)
+                            {
+                                AllBlackPieces[toi] = true;
+                                AllBlackPieces[fromi] = false;
+                                AllPieces[toi] = true;
+                                AllPieces[fromi] = false;
+                                return true;
+                            }
                         }
-                        else if (BlackKnights[from])
-                        {
-                            BlackKnights[from] = false;
-                            BlackKnights[to] = true; //this is oversimplified
-                        }
-                        else if (BlackBishops[from])
-                        {
-                            BlackBishops[from] = false;
-                            BlackBishops[to] = true; //this is oversimplified
-                        }
-                        else if (BlackQueens[from])
-                        {
-                            BlackQueens[from] = false;
-                            BlackQueens[to] = true; //this is oversimplified
-                        }
-                        else if(BlackKing[from])
-                        {
-                            BlackKing[from] = false;
-                            BlackKing[to] = true;
-                        }
+                      
                     }
-                    AllBlackPieces[to] = true;
-                    AllWhitePieces[from] = false;
+                    throw new IllegalMoveException("There is no piece at this index " + fromi + "to move");
+ 
                 }
                 
-                AllPieces[to] = true;
-                AllPieces[from] = false;
-
-                return true;
-            }
-            throw new Exception("There is no piece at this index to move");
-            return false;
+            
+            throw new IllegalMoveException("Movement goes off of the board");
         }
-        //this method will get changed to check 
-        //and see if this move is legal ie is there a peice of same type in 
 
-        //currently over simplefied 
+        private bool DoKingMoveIfLegal(bool isPieceWhite, int fromi, int toi)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool DoQueenMoveIfLegal(bool isPieceWhite, int fromi, int toi)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool DoBishopMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool DoKnightMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool DoRookMoveIfLegal(bool b, int fromi, int toi)
+        {
+
+            throw new IllegalMoveException("Rook moves not implimented");
+        }
+
+        private void CheckForSelfCheckMove(int @fromi, int toi)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool DoPawnMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
+        {
+            int moveDistance;
+            if (pieceIsWhite)
+            {
+                moveDistance = fromi - toi;
+                if (moveDistance == 8 && !AllPieces[toi]) // pawn moves forward one space and there was no piece in the square
+                {
+                    WhitePawns[fromi] = false;
+                    WhitePawns[toi] = true;
+                }
+
+                else if (moveDistance == 16 && !AllPieces[toi] && !AllPieces[toi+8] && (fromi < 56 && fromi > 47 ))//is in second row and moves 2 rows forward
+                {
+                    WhitePawns[fromi] = false;
+                    WhitePawns[toi] = true;
+                    WhitePawns[toi] = true;
+                }
+                else if ((moveDistance == 7 || moveDistance == 9) && AllBlackPieces[toi]) //pawn slanted capture 
+                {
+                    RemovePeiceAtIndex(toi);
+                    WhitePawns[fromi] = false;
+                    WhitePawns[toi] = true;
+                }
+                    //toiDO:En Passant
+                else
+                {
+                    throw new IllegalMoveException(string.Format("The white pawn move from {0} to {1} was not legal", fromi,toi));
+                }
+            }
+
+            else//piece moved is black
+            {
+                moveDistance = toi - fromi;
+                if (moveDistance == 8 && !AllPieces[toi]) // pawn moves forward one space and there was no piece in the square
+                {
+                    BlackPawns[fromi] = false;
+                    BlackPawns[toi] = true;
+                    AllBlackPieces[toi] = true;
+                    
+                }
+
+                else if (moveDistance == 16 && !AllPieces[toi] && !AllPieces[toi + 8] && (fromi < 23 && fromi > 7))//is in second row and moves 2 rows forward
+                {
+                    BlackPawns[fromi] = false;
+                    BlackPawns[toi] = true;
+                    AllBlackPieces[toi] = true;
+                }
+                else if ((moveDistance == 7 || moveDistance == 9) && AllWhitePieces[toi]) //pawn slanted capture 
+                {
+                    RemovePeiceAtIndex(toi);
+                    BlackPawns[fromi] = false;
+                    BlackPawns[toi] = true;
+                }
+                else
+                {
+                    throw new IllegalMoveException(string.Format("The black pawn move from {0} to {1} was not legal", fromi, toi));
+                }
+            }
+            return true;//legal move
+
+
+        }
+
+        /*This removes a peice from the board */
         private void RemovePeiceAtIndex(int index)
         {
+            //should this be a set of if statements to save processing power and not loop through the entire array? 
             foreach (var bitArray in board)
             {
                 if (bitArray[index])
