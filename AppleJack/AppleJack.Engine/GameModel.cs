@@ -258,10 +258,21 @@ namespace AppleJack.Engine
             throw new NotImplementedException();
         }
 
-        private bool DoRookMoveIfLegal(bool b, int fromi, int toi)
+        private bool DoRookMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
         {
+            if (MoveOnBoard(fromi, toi)) {
+                
+            }
 
             throw new IllegalMoveException("Rook moves not implimented");
+        }
+
+        private bool MoveOnBoard(int fromi, int toi)
+        {
+            if (MoveOnBoard(fromi,toi)) {
+                return true;
+            }
+            return false;
         }
 
         private void CheckForSelfCheckMove(int @fromi, int toi)
