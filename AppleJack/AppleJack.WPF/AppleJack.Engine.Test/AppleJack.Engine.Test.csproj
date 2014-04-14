@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestMovementWithoutLegality.cs" />
     <Compile Include="TestMovementsWithLegalityChecks.cs" />
+    <Compile Include="TestPreProcessedMoveDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AppleJack.Engine\AppleJack.Engine.csproj">

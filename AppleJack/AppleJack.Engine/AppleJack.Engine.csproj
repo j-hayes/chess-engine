@@ -43,6 +43,7 @@
     <Compile Include="IGameModel.cs" />
     <Compile Include="IllegalMoveException.cs" />
     <Compile Include="InitalBoardConstants.cs" />
+    <Compile Include="IMoveGenerationPreProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
