@@ -38,6 +38,23 @@ namespace AppleJack.WPF.ViewModels
         private const string King = "K";
 
 
+        private string _currentMoveColor;
+        public string CurrentMoveColor
+        {
+            get {
+                if (_theGame.IsWhiteTurn)
+                {
+                    return "white";
+                }
+                return "black";
+            }
+            set
+            {
+                _currentMoveColor = value;
+                OnPropertyChanged("CurrentMoveColor");
+            }
+        }
+
         public string PrintToScreen
         {
             get { return _printToScreen; }
@@ -167,10 +184,10 @@ namespace AppleJack.WPF.ViewModels
         }
 
 
-        public void LeftButtonDownInSquare(string id)//rename this variable todo:
+        public void LeftButtonDownInSquare(string fromi)
         {
-             SquareToMoveFrom = int.Parse(id);
-            PrintToScreen = id;
+             SquareToMoveFrom = int.Parse(fromi);
+            PrintToScreen = fromi;
 
 
 
@@ -179,10 +196,10 @@ namespace AppleJack.WPF.ViewModels
         private int SquareToMoveFrom { get; set; }
         private int SquareToMoveTo { get; set; }
 
-        public void LeftButtonUpInSquare(string id)
+        public void LeftButtonUpInSquare(string toi)
         {
-            PrintToScreen = id;
-            SquareToMoveTo = int.Parse(id);
+            PrintToScreen = toi;
+            SquareToMoveTo = int.Parse(toi);
             bool result = _theGame.TryMove(SquareToMoveFrom, SquareToMoveTo);
             if (result)
             {
@@ -267,6 +284,7 @@ namespace AppleJack.WPF.ViewModels
                 }
             }
             OnPropertyChanged("TheBoard");
+            OnPropertyChanged("CurrentMoveColor");
         }
 
 

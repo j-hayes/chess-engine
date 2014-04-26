@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 
 namespace AppleJack.Engine
 {
@@ -31,10 +32,17 @@ namespace AppleJack.Engine
          * 0th bitarray is 
          */
         public BitArray[] board { get; set; }
+        private MoveGenerationPreProcess preProcessDatabase;
+        public bool IsWhiteTurn { get; set;  }
+
 
         public GameModel()
         {
+            preProcessDatabase = new MoveGenerationPreProcess();
+            
             board = InitializeBoard(true);
+            IsWhiteTurn = true;
+
         }
 
         private BitArray[] InitializeBoard(bool playerIsWhite)
@@ -144,10 +152,11 @@ namespace AppleJack.Engine
             get { return board.Count(); }//not correct??
            
         }
+
         /*This method throws illegal move exception if one occurs*/
         public bool TryMove(int fromi, int toi) 
         {
-            // toido: think about roll back strategy? 
+            // toDo: think about roll back strategy? 
            
                 if ((toi < 64 && toi > -1) && (fromi < 64 && fromi > -1)) //Test if moves are on board 0 to 63 indedicies 
                 {
@@ -159,121 +168,273 @@ namespace AppleJack.Engine
                       
                         if (AllWhitePieces[fromi])
                         {
-                            if (WhitePawns[fromi])
+                            if (IsWhiteTurn)
                             {
-                                wasLegal = DoPawnMoveIfLegal(true, fromi, toi);
+                                if (!AllWhitePieces[toi])
+                                {
+                                    if (WhitePawns[fromi])
+                                    {
+                                        wasLegal = DoPawnMoveIfLegal(true, fromi, toi);
+                                    }
+                                    else if (WhiteRooks[fromi])
+                                    {
+                                        wasLegal = DoRookMoveIfLegal(true, fromi, toi);
+                                    }
+                                    else if (WhiteKnights[fromi])
+                                    {
+                                        wasLegal = DoKnightMoveIfLegal(true, fromi, toi);
+                                    }
+                                    else if (WhiteBishops[fromi])
+                                    {
+                                        wasLegal = DoBishopMoveIfLegal(true, fromi, toi);
+                                    }
+                                    else if (WhiteQueens[fromi])
+                                    {
+                                        wasLegal = DoQueenMoveIfLegal(true, fromi, toi);
+                                    }
+                                    else if (WhiteKing[fromi])
+                                    {
+                                        wasLegal = DoKingMoveIfLegal(true, fromi, toi);
+                                    }
+                                    if (wasLegal)
+                                    {
+                                        AllWhitePieces[toi] = true;
+                                        AllWhitePieces[fromi] = false;
+                                        AllPieces[toi] = true;
+                                        AllPieces[fromi] = false;
+                                        IsWhiteTurn = false;
+                                        return true;
+                                    }
+                                }
+                                
                             }
-                            else if (WhiteRooks[fromi])
+                            else
                             {
-                                wasLegal = DoRookMoveIfLegal(true, fromi, toi);
+                                throw new IllegalMoveException("Not White's Turn");
                             }
-                            else if (WhiteKnights[fromi])
-                            {
-                                wasLegal = DoKnightMoveIfLegal(true, fromi, toi);
-                            }
-                            else if (WhiteBishops[fromi])
-                            {
-                                wasLegal = DoBishopMoveIfLegal(true, fromi, toi);
-                            }
-                            else if (WhiteQueens[fromi])
-                            {
-                                wasLegal = DoQueenMoveIfLegal(true, fromi, toi);
-                            }
-                            else if (WhiteKing[fromi])
-                            {
-                                wasLegal = DoKingMoveIfLegal(true, fromi, toi);
-                            }
-                            if (wasLegal)
-                            {
-                                AllWhitePieces[toi] = true;
-                                AllWhitePieces[fromi] = false;
-                                AllPieces[toi] = true;
-                                AllPieces[fromi] = false;
-                                return true;
-                            }
-                           
                         }
                         else if (AllBlackPieces[fromi])
                         {
-                            if (BlackPawns[fromi])
+                            if (!IsWhiteTurn)
                             {
-                                wasLegal = DoPawnMoveIfLegal(false, fromi, toi);
+                                if (!AllBlackPieces[toi])
+                                {
+
+                                    if (BlackPawns[fromi])
+                                    {
+                                        wasLegal = DoPawnMoveIfLegal(false, fromi, toi);
+                                    }
+                                    else if (BlackRooks[fromi])
+                                    {
+                                        wasLegal = DoRookMoveIfLegal(false, fromi, toi);
+                                    }
+                                    else if (BlackKnights[fromi])
+                                    {
+                                        wasLegal = DoKnightMoveIfLegal(false, fromi, toi);
+                                    }
+                                    else if (BlackBishops[fromi])
+                                    {
+                                        wasLegal = DoBishopMoveIfLegal(false, fromi, toi);
+                                    }
+                                    else if (BlackQueens[fromi])
+                                    {
+                                        wasLegal = DoQueenMoveIfLegal(false, fromi, toi);
+                                    }
+                                    else if (BlackKing[fromi])
+                                    {
+                                        wasLegal = DoKingMoveIfLegal(false, fromi, toi);
+                                    }
+                                    if (wasLegal)
+                                    {
+                                        AllBlackPieces[toi] = true;
+                                        AllBlackPieces[fromi] = false;
+                                        AllPieces[toi] = true;
+                                        AllPieces[fromi] = false;
+                                        IsWhiteTurn = true;
+                                        return true;
+                                    }
+                                }
+
                             }
-                            else if (BlackRooks[fromi])
+                            else
                             {
-                                wasLegal = DoRookMoveIfLegal(false, fromi, toi);
+                                throw new IllegalMoveException("Not Black's Turn");
                             }
-                            else if (BlackKnights[fromi])
-                            {
-                                wasLegal = DoKnightMoveIfLegal(true, fromi, toi);
-                            }
-                            else if (BlackBishops[fromi])
-                            {
-                                wasLegal = DoBishopMoveIfLegal(false, fromi, toi);
-                            }
-                            else if (BlackQueens[fromi])
-                            {
-                                wasLegal = DoQueenMoveIfLegal(false, fromi, toi);
-                            }
-                            else if (BlackKing[fromi])
-                            {
-                                wasLegal = DoKingMoveIfLegal(false, fromi, toi);
-                            }
-                            if (wasLegal)
-                            {
-                                AllBlackPieces[toi] = true;
-                                AllBlackPieces[fromi] = false;
-                                AllPieces[toi] = true;
-                                AllPieces[fromi] = false;
-                                return true;
-                            }
+
                         }
-                      
                     }
-                    throw new IllegalMoveException("There is no piece at this index " + fromi + "to move");
- 
+                    throw new IllegalMoveException("There is no piece at this index " + fromi + "to move");        
                 }
-                
-            
             throw new IllegalMoveException("Movement goes off of the board");
         }
 
         private bool DoKingMoveIfLegal(bool isPieceWhite, int fromi, int toi)
         {
-            throw new NotImplementedException();
+            int[] legalMovesRays = preProcessDatabase.TestMove(ChessPeiceType.BlackKing, fromi, toi);
+            if (legalMovesRays != null)
+            {
+                if (NoPeiceBlocksMove(legalMovesRays, toi))
+                {
+                    if (isPieceWhite)
+                    {
+                        RemovePeiceAtIndex(toi);
+                        WhiteKing[fromi] = false;
+                        WhiteKing[toi] = true;
+
+
+                    }
+                    else
+                    {
+                        RemovePeiceAtIndex(toi);
+                        BlackKing[fromi] = false;
+                        BlackKing[toi] = true;
+
+                    }
+                    return true;
+                }
+                throw new IllegalMoveException("Move Blocked");
+            }
+
+            throw new IllegalMoveException("Illegal Move");
         }
 
         private bool DoQueenMoveIfLegal(bool isPieceWhite, int fromi, int toi)
         {
-            throw new NotImplementedException();
-        }
+            int[] legalMovesRays = preProcessDatabase.TestMove(ChessPeiceType.WhiteQueen, fromi, toi);
+            if (legalMovesRays != null)
+            {
+                if (NoPeiceBlocksMove(legalMovesRays, toi))
+                {
+                    if (isPieceWhite)
+                    {
+                        RemovePeiceAtIndex(toi);
+                        WhiteQueens[fromi] = false;
+                        WhiteQueens[toi] = true;
 
-        private bool DoBishopMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
-        {
-            throw new NotImplementedException();
-        }
 
-        private bool DoKnightMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
-        {
-            throw new NotImplementedException();
-        }
+                    }
+                    else
+                    {
+                        RemovePeiceAtIndex(toi);
+                        BlackQueens[fromi] = false;
+                        BlackQueens[toi] = true;
 
-        private bool DoRookMoveIfLegal(bool pieceIsWhite, int fromi, int toi)
-        {
-            if (MoveOnBoard(fromi, toi)) {
-                
+                    }
+                    return true;
+                }
+                throw new IllegalMoveException("Move Blocked");
             }
 
-            throw new IllegalMoveException("Rook moves not implimented");
+            throw new IllegalMoveException("Illegal Move");
         }
 
-        private bool MoveOnBoard(int fromi, int toi)
+        private bool DoBishopMoveIfLegal(bool isPieceWhite, int fromi, int toi)
         {
-            if (MoveOnBoard(fromi,toi)) {
-                return true;
+            int[] legalMovesRays = preProcessDatabase.TestMove(ChessPeiceType.WhiteBishop, fromi, toi);
+
+            if (legalMovesRays!=null)
+            {
+                if (NoPeiceBlocksMove(legalMovesRays, toi))
+                {
+                    if (isPieceWhite)
+                    {
+                        RemovePeiceAtIndex(toi);
+                        WhiteBishops[fromi] = false;
+                        WhiteBishops[toi] = true;
+
+
+                    }
+                    else
+                    {
+                        RemovePeiceAtIndex(toi);
+                        BlackBishops[fromi] = false;
+                        BlackBishops[toi] = true;
+
+                    }
+                    return true;
+                }
+                throw new IllegalMoveException("Move Blocked");
+            }
+
+            throw new IllegalMoveException("Illegal Move");
+        }
+
+        private bool DoKnightMoveIfLegal(bool isPieceWhite, int fromi, int toi)
+        {
+            int[] legalMovesRay = preProcessDatabase.TestMove(ChessPeiceType.BlackKnight, fromi, toi);
+            if (legalMovesRay!=null)
+            {
+                if (NoPeiceBlocksMove(legalMovesRay, toi))
+                {
+                    if (isPieceWhite)
+                    {
+                        RemovePeiceAtIndex(toi);
+                        WhiteKnights[fromi] = false;
+                        WhiteKnights[toi] = true;
+                    }
+                    else
+                    {
+                        RemovePeiceAtIndex(toi);
+                        BlackKnights[fromi] = false;
+                        BlackKnights[toi] = true;
+
+                    }
+                    return true;
+                } 
+                throw new IllegalMoveException("Move Blocked");
+            }
+
+            throw new IllegalMoveException("Illegal Move");
+        }
+
+        private bool DoRookMoveIfLegal(bool isPieceWhite, int fromi, int toi)
+        {
+            int [] legalMovesRay = preProcessDatabase.TestMove(ChessPeiceType.BlackRook, fromi, toi);
+            if (legalMovesRay != null)
+            {
+                if (NoPeiceBlocksMove(legalMovesRay, toi))
+                {
+                    if (isPieceWhite)
+                    {
+                        RemovePeiceAtIndex(toi);
+                        WhiteRooks[fromi] = false;
+                        WhiteRooks[toi] = true;
+                    }
+                    else
+                    {
+                        RemovePeiceAtIndex(toi);
+                        BlackRooks[fromi] = false;
+                        BlackRooks[toi] = true;
+
+                    }
+                    return true;
+                }
+                throw new IllegalMoveException("Move Blocked");
+            }
+
+            throw new IllegalMoveException("Illegal Move");
+        }
+
+        private bool NoPeiceBlocksMove(int[] legalMoveRay, int toi)
+        {
+
+            foreach (int i in legalMoveRay)
+            {
+                if (i == toi)
+                {
+                    return true;
+                }
+                if (AllPieces[i])
+                {
+                    throw new IllegalMoveException("Cannot Jump over pieces");
+                }
+                
             }
             return false;
         }
+                
+
+
 
         private void CheckForSelfCheckMove(int @fromi, int toi)
         {
@@ -295,7 +456,7 @@ namespace AppleJack.Engine
                 else if (moveDistance == 16 && !AllPieces[toi] && !AllPieces[toi+8] && (fromi < 56 && fromi > 47 ))//is in second row and moves 2 rows forward
                 {
                     WhitePawns[fromi] = false;
-                    WhitePawns[toi] = true;
+              
                     WhitePawns[toi] = true;
                 }
                 else if ((moveDistance == 7 || moveDistance == 9) && AllBlackPieces[toi]) //pawn slanted capture 
@@ -304,7 +465,7 @@ namespace AppleJack.Engine
                     WhitePawns[fromi] = false;
                     WhitePawns[toi] = true;
                 }
-                    //toiDO:En Passant
+                    //toDo:En Passant
                 else
                 {
                     throw new IllegalMoveException(string.Format("The white pawn move from {0} to {1} was not legal", fromi,toi));
@@ -322,7 +483,7 @@ namespace AppleJack.Engine
                     
                 }
 
-                else if (moveDistance == 16 && !AllPieces[toi] && !AllPieces[toi + 8] && (fromi < 23 && fromi > 7))//is in second row and moves 2 rows forward
+                else if (moveDistance == 16 && !AllPieces[toi] && !AllPieces[toi -8] && (fromi < 23 && fromi > 7))//is in second row and moves 2 rows forward
                 {
                     BlackPawns[fromi] = false;
                     BlackPawns[toi] = true;

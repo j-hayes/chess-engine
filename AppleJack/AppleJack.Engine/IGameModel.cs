@@ -4,6 +4,7 @@ namespace AppleJack.Engine
 {
     public interface IGameModel
     {
+
          BitArray AllPieces{ get;  }
        
 
@@ -39,6 +40,8 @@ namespace AppleJack.Engine
         BitArray BlackKing { get;  }
 
         int PieceTypeCount { get; }
+
+        bool IsWhiteTurn { get; set; }
 
         bool TryMove(int squaretoMovefromi, int squaretoMovetoi);
     }

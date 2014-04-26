@@ -66,7 +66,7 @@ namespace AppleJack.Engine
             return pawns;
         }
 
-        /*toido: Consider making this use whitePawns with overload*/
+        /*toDo: Consider making this use whitePawns with overload*/
         public static bool[] WhitePawns()
         {
             var pawns = AllFalse;
