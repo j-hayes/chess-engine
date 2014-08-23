@@ -33,11 +33,14 @@ namespace AppleJack.Engine
          */
         public BitArray[] board { get; set; }
         private MoveGenerationPreProcess preProcessDatabase;
+        private bool BlackKingHasMoved = false;
         public bool IsWhiteTurn { get; set;  }
 
 
         public GameModel()
         {
+         
+               
             preProcessDatabase = new MoveGenerationPreProcess();
             
             board = InitializeBoard(true);
@@ -69,6 +72,8 @@ namespace AppleJack.Engine
 
             return initialGame;
         }
+       
+        #region bitarrays 
 
         public BitArray AllPieces
         {
@@ -145,7 +150,7 @@ namespace AppleJack.Engine
             get { return board[14]; }
         }
 
-
+        #endregion
 
         public int PieceTypeCount
         {
@@ -153,7 +158,7 @@ namespace AppleJack.Engine
            
         }
 
-        /*This method throws illegal move exception if one occurs*/
+        /*This method throws illegal move exception if an illegal move occurs occurs*/
         public bool TryMove(int fromi, int toi) 
         {
             // toDo: think about roll back strategy? 
@@ -294,9 +299,30 @@ namespace AppleJack.Engine
                 }
                 throw new IllegalMoveException("Move Blocked");
             }
+            if(WhiteKingHasMoved){
+                if (isPieceWhite)
+                {
+                    if (fromi == 60)
+                    {
+                       
+                       // if (NoPeiceBlocksMove()) //actually can be implied from being on 60
+                        {
 
+                            WhiteKingHasMoved = true;
+                        }
+                    }
+                   
+                }
+            else if (!BlackKingHasMoved)
+            {
+
+            }
+            }
             throw new IllegalMoveException("Illegal Move");
+                        
         }
+
+        private bool WhiteKingHasMoved = false;
 
         private bool DoQueenMoveIfLegal(bool isPieceWhite, int fromi, int toi)
         {
@@ -433,9 +459,6 @@ namespace AppleJack.Engine
             return false;
         }
                 
-
-
-
         private void CheckForSelfCheckMove(int @fromi, int toi)
         {
             throw new NotImplementedException();

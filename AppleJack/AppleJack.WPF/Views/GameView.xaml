@@ -5,7 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:viewModels="clr-namespace:AppleJack.WPF.ViewModels"
       mc:Ignorable="d" 
-      d:DesignHeight="800" d:DesignWidth="550" d:DataContext="{d:DesignInstance viewModels:GameViewModel}">
+      d:DesignHeight="800" d:DesignWidth="550" 
+        d:DataContext="{d:DesignInstance viewModels:GameViewModel}">
     <Grid>
      <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
@@ -21,7 +22,6 @@
         </Menu>
         <Grid Row="1">
             <TextBlock  Text="{Binding Path=PrintToScreen, Mode=TwoWay}"></TextBlock></Grid>
-        
         <ItemsControl Grid.Row="2" ItemsSource="{Binding Path=TheBoard, Mode=TwoWay}" >
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>

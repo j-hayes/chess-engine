@@ -87,11 +87,6 @@ namespace AppleJack.WPF.ViewModels
 
         }
 
-
-
-        
-
-
     }
 
 }

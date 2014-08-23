@@ -212,7 +212,7 @@ namespace AppleJack.WPF.ViewModels
 
 
         }
-
+        /*Todo: Can this be made faster by just updating the two squares that might have been effected?*/
         private void UpdateBoard()
         {
             int index;
